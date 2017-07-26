@@ -81,6 +81,7 @@
 \usepackage{graphicx} % Allows including images
 \graphicspath{ {../img/} }
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{csquotes}
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -157,8 +158,8 @@
 	\begin{itemize}
 	\item Today, we'll run through three other techniques in applied econometrics.
 		\begin{itemize}
-			\item This will be focused on examples. It will not be focused on theory or on coding.
-			\item In other words, it's going to be abstract, but not too abstract.
+			\item This will be focused on examples, not theory or coding.
+			\item It's intended to help you get familiar with the terminology, understand what's possible and know how to get started.
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -167,7 +168,7 @@
 
 \begin{frame}
 	\begin{itemize}
-	\item Like economists, we're often after causality. It's more interesting to say that X causes Y, not merely that X and Y are related.
+	\item Like researchers, we're often after causality. It's a better story to say that X causes Y, not just that X and Y are related.
 	\item The gold standard: randomized trials. 
 		\begin{itemize}
 			\item Think military drafts. Because whether you're drafted is essentially random, we can use the difference in outcomes between the two groups to analyze the causal effect of joining the military.
@@ -179,11 +180,11 @@
 
 \begin{frame}
 	\begin{itemize}
-		\item Here's the classic example.\footnote{More examples can be found in \cite{lee2010regression}, pp. 339-42.}
+		\item Here's the classic example.\footnote{More examples in \cite{lee2010regression}, pp. 339-42.}
 		\begin{itemize}
-			\item Say that if you get a 2000 or above on your SAT, you're guaranteed to get into college, but if you get below a 2000, you don't.
-			\item The difference in ability between someone who gets a 1980 and a 2020 is basically nothing.
-			\item So we can use the difference in the earnings of people who got below a 2000 and above a 2000 to get the causal effect of college admission on earnings.
+			\item Say that if you get a 2000 or above on your SAT, you're guaranteed to get into college, but if you get below 2000, you don't.
+			\item The difference in ability between someone who scores 1980 and 2020 is basically nothing.
+			\item So we can use the difference in the earnings of people who scored below 2000 and above 2000 to get the causal effect of college admission on earnings.
 		\end{itemize}
 	\end{itemize}
 	\begin{figure}
@@ -212,7 +213,7 @@
 		\item Geographic distance from a border where some meaningful policy change happens.\footnote{See \cite{black1999better}.}
 		\begin{itemize}
 			\item Consider houses on two sides of a school district border. They are basically the same except for the school they're assigned to.
-			\item With data on home prices, this can be used to figure out how much parents are willing to pay to send their children to better schools.
+			\item This can be used to figure out how much parents are willing to pay to send their children to better schools.
 		\end{itemize}
 	\end{itemize}
 	\begin{figure}
@@ -225,7 +226,7 @@
 	\begin{itemize}
 		\item How to do it
 		\begin{itemize}
-			\item Draw a scatterplot, then draw two trend lines on either side of the cutoff.
+			\item Make a scatterplot, then draw two trend lines on either side of the cutoff.
 			\item The visual discontinuity can be powerful even without the underlying statistics, but make sure the effect you observe is significant.
 		\end{itemize}
 	\end{itemize}
@@ -255,7 +256,7 @@
 	\begin{itemize}
 		\item Ordinary least-squares estimates the conditional mean of a dependent variable given particular values of the independent variables.
 		\item But for skewed distributions, the mean can be misleading. Sometimes the median is more informative.
-		\item What if we could estimate the conditional median of a function? Or the 25th percentile, or the 99th percentile...
+		\item What if we could estimate the conditional median? Or the 25th percentile, or the 99th percentile...
 		\begin{figure}
 			\includegraphics[width=7cm]{skewed-distribution.png}
 			\centering
@@ -330,6 +331,19 @@
 
 \begin{frame}
 	\begin{itemize}
+		\item Effect of unions on wages.\footnote{See \cite{chamberlain1994quantile}.}
+		\begin{itemize}
+			\item At the lowest quantiles, unions make a big difference in wages. At the top of the wage distribution, unions hardly matter. 
+		\end{itemize}
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=8cm]{chamberlain-unions.png}
+		\centering
+	\end{figure}
+\end{frame} 
+
+\begin{frame}
+	\begin{itemize}
 		\item How to do it
 		\begin{itemize}
 			\item Pretty much like an OLS regression computed for a given quantile.
@@ -342,7 +356,82 @@
 
 \section{Survival analysis}
 
+\begin{frame}
+	\begin{itemize}
+		\item We're interested in durations and how they differ across groups.
+			\begin{itemize}
+				\item Length of a politician's time in office for different parties.
+				\item Patient lifetime after heart surgery for different doctors.
+			\end{itemize}
+		\item The problem: We don't observe the ``death'' event for every individual.
+			\begin{itemize}
+				\item This is known as censorship, and will lead us to underestimate the true lifetime.
+			\end{itemize}
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=6cm]{lifelines-censorship.png}
+		\centering
+	\end{figure}
+\end{frame}
 
+\begin{frame}
+	\begin{itemize}
+		\item Survival analysis is essentially a bag of tools to get around the censorship problem.
+		\item It lets us estimate the \textit{survival function}\footnote{Known as the Kaplan-Meier estimator.} -- the fraction of the population that survives past a given time -- and the \textit{hazard rate} -- the probability of ``dying'' at a given time.
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=8cm]{singer-survivalhazard.png}
+		\centering
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item We can run a survival regression to analyze how the baseline hazard rate changes with some explanatory variable.
+		\item But it's sometimes enough just to look at the survival functions for subgroups.
+		\begin{itemize}
+			\item Consider the lifetime for democratic and nondemocratic regimes.\footnote{\url{lifelines.readthedocs.io}}
+		\end{itemize}
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=8cm]{lifelines-regimes.png}
+		\centering
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item Rich drivers are more likely to honk faster when they're blocked at an intersection.\footnote{See \cite{diekmann1996social} (but note that $N=57$).}
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=6cm]{diekmann-cars.png}
+		\centering
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item Armand (et al.) used this to look at building safety complaints in Los Angeles.\footnote{\url{latimes.com/local/cityhall/la-me-building-safety-delay-20141219-story.html}}
+	\end{itemize}
+	\begin{displayquote}
+		``Last year, the citywide median wait for a visit from an inspector or other initial action by the building department following a complaint was eight days -- compared with 26 days in the eastern parts of the city.''
+	\end{displayquote}
+	\begin{figure}
+		\includegraphics[width=6cm]{latimes-complaints.png}
+		\centering
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item How to do it
+		\begin{itemize}
+			\item The Python \texttt{lifelines} package is good and well-documented.
+			\item Use the \texttt{KaplanMeierFitter} to estimate the survival function and the \texttt{CoxPHFitter} to run a survival regression.
+			\item Median lifetime is an intuitive and powerful statistic.\footnote{But nothing is easy, see \cite{singer2003describing} p. 347 for caveats.}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
 
 \section{References}
 
@@ -350,7 +439,5 @@
         \bibliographystyle{apalike}
         \bibliography{slides.bib}
 \end{frame}
-
-
 
 \end{document}
